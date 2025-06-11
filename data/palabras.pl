@@ -42,16 +42,16 @@ obtener_palabra(Palabra) :-
 % -----------------------------------------------------------------------------
 agregar_palabra(Nueva) :-
     \+ es_palabra_valida(Nueva),
-    write('❌ Palabra inválida. Usa solo letras minúsculas: [c,a,s,a]'), nl, !.
+    write(' Palabra inválida. Usa solo letras minúsculas: [c,a,s,a]'), nl, !.
 
 agregar_palabra(Nueva) :-
     palabra(Nueva),
-    write('⚠️ La palabra ya existe.'), nl, !.
+    write(' La palabra ya existe.'), nl, !.
 
 agregar_palabra(Nueva) :-
     assertz(palabra(Nueva)),
     guardar_palabras,
-    write('✅ Palabra agregada exitosamente.'), nl.
+    write(' Palabra agregada exitosamente.'), nl.
 
 % -----------------------------------------------------------------------------
 % es_palabra_valida(+Lista)
@@ -73,7 +73,7 @@ letra_valida(L) :-
 % -----------------------------------------------------------------------------
 listar_palabras :-
     findall(W, palabra(W), Lista),
-    write('📚 Palabras registradas:'), nl,
+    write(' Palabras registradas:'), nl,
     mostrar_lista(Lista), nl.
 
 mostrar_lista([]).
@@ -92,7 +92,7 @@ guardar_palabras :-
     listing(palabra/1),
     close(Stream),
     set_output(user_output),
-    write('💾 Base de palabras guardada en data/palabras_guardadas.pl'), nl.
+    write(' Base de palabras guardada en data/palabras_guardadas.pl'), nl.
 
 % -----------------------------------------------------------------------------
 % cargar_palabras_guardadas/0
@@ -101,7 +101,7 @@ guardar_palabras :-
 cargar_palabras_guardadas :-
     exists_file('data/palabras_guardadas.pl'),
     consult('data/palabras_guardadas.pl'),
-    write('📂 Palabras guardadas cargadas correctamente.'), nl.
+    write(' Palabras guardadas cargadas correctamente.'), nl.
 cargar_palabras_guardadas :-
     \+ exists_file('data/palabras_guardadas.pl'),
-    write('ℹ️ No se encontraron palabras guardadas.'), nl.
+    write('ℹ No se encontraron palabras guardadas.'), nl.
