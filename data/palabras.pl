@@ -27,6 +27,21 @@ palabra([v,a,r,i,a,b,l,e]).
 palabra([p,r,e,d,i,c,a,d,o]).
 
 % -----------------------------------------------------------------------------
+% cargar_palabras_guardadas_loop(+Stream)
+% Lee términos del Stream y los agrega a la base de conocimiento.
+% -----------------------------------------------------------------------------
+cargar_palabras_guardadas_loop(Stream) :-
+    read_term(Stream, Term, []), % Usar read_term para manejar correctamente el fin de archivo
+    (   Term == end_of_file ->
+        true
+    ;   ( functor(Term, palabra, 1) -> % Asegurarse que es un término palabra/1
+            assertz(Term)
+        ;   write('Advertencia: Término inesperado en palabras_guardadas.pl: '), write(Term), nl
+        ),
+        cargar_palabras_guardadas_loop(Stream)
+    ).
+
+% -----------------------------------------------------------------------------
 % obtener_palabra(-Palabra)
 % Selecciona aleatoriamente una palabra de la base de conocimiento
 % -----------------------------------------------------------------------------
@@ -88,10 +103,12 @@ mostrar_lista([X | R]) :-
 % -----------------------------------------------------------------------------
 guardar_palabras :-
     open('data/palabras_guardadas.pl', write, Stream),
+    % No escribir :- dynamic palabra/1. aquí, solo los hechos.
+    % listing(palabra/1) ya hace esto correctamente.
     set_output(Stream),
     listing(palabra/1),
     close(Stream),
-    set_output(user_output),
+    set_output(user_output), % Restaurar salida estándar
     write(' Base de palabras guardada en data/palabras_guardadas.pl'), nl.
 
 % -----------------------------------------------------------------------------
@@ -100,8 +117,17 @@ guardar_palabras :-
 % -----------------------------------------------------------------------------
 cargar_palabras_guardadas :-
     exists_file('data/palabras_guardadas.pl'),
-    consult('data/palabras_guardadas.pl'),
+    !, % Si el archivo existe, nos comprometemos a esta cláusula.
+    % Limpiar las palabras existentes si las guardadas deben reemplazarlas por completo.
+    % Esto imita el comportamiento de "overwrite" de consult/1.
+    retractall(palabra(_)),
+    setup_call_cleanup(
+        open('data/palabras_guardadas.pl', read, Stream),
+        cargar_palabras_guardadas_loop(Stream), % Usar el nuevo loop de carga
+        close(Stream)
+    ),
     write(' Palabras guardadas cargadas correctamente.'), nl.
 cargar_palabras_guardadas :-
-    \+ exists_file('data/palabras_guardadas.pl'),
-    write('ℹ No se encontraron palabras guardadas.'), nl.
+    % Esta cláusula se ejecuta si palabras_guardadas.pl no existe.
+    % Las palabras iniciales definidas en este archivo permanecerán activas.
+    write('ℹ No se encontraron palabras guardadas, usando palabras iniciales del código.'), nl.
