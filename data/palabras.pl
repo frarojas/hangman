@@ -130,4 +130,4 @@ cargar_palabras_guardadas :-
 cargar_palabras_guardadas :-
     % Esta cláusula se ejecuta si palabras_guardadas.pl no existe.
     % Las palabras iniciales definidas en este archivo permanecerán activas.
-    write('ℹ No se encontraron palabras guardadas, usando palabras iniciales del código.'), nl.
+    write('No se encontraron palabras guardadas, usando palabras iniciales del código.'), nl.

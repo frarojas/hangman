@@ -36,6 +36,7 @@ seleccionar_opcion(1, Palabra) :-
 seleccionar_opcion(2, Palabra) :-
     write('Ingresa la palabra (terminada con punto, ej: casa.): '),
     read(Input),
+    consumir_resto_linea, % Consume el newline restante
     nl,
     (   atom(Input) ->
         downcase_atom(Input, LowerAtom),
@@ -62,3 +63,10 @@ seleccionar_opcion(_, Palabra) :-
 valid_palabra(Lista) :-
     Lista \= [],
     forall(member(L, Lista), (atom(L), atom_length(L,1), char_type(L, lower))).
+
+consumir_resto_linea :-
+    get_char(Char),
+    ( Char == '\n' -> true         
+    ; Char == end_of_file -> true  
+    ; consumir_resto_linea         
+    ).
