@@ -92,17 +92,30 @@ letra_valida(L) :-
 
 % --- Ciclo Principal del Juego ---
 
+% -----------------------------------------------------------------------------
+% jugar/0
+% Inicia el juego, muestra bienvenida y pregunta intentos
+% -----------------------------------------------------------------------------
 jugar :-
     bienvenida,
     preguntar_intentos(Intentos),
     iniciar_juego(Intentos),
     ciclo_del_juego.
 
+% -----------------------------------------------------------------------------
+% bienvenida/0
+% Muestra un mensaje de bienvenida al jugador
+% -----------------------------------------------------------------------------
+
 bienvenida :-
     nl, write('============================='), nl,
     write('   Bienvenido al Ahorcado!'), nl,
     write('============================='), nl.
 
+% -----------------------------------------------------------------------------
+% ciclo_del_juego/0
+% Ciclo principal del juego, maneja turnos hasta victoria o derrota
+% -----------------------------------------------------------------------------
 ciclo_del_juego :-
     (   verificar_victoria ->
         manejar_victoria
@@ -114,6 +127,10 @@ ciclo_del_juego :-
         ciclo_del_juego % Llamada recursiva para el siguiente turno
     ).
 
+% -----------------------------------------------------------------------------
+% preguntar_intentos(-Intentos)
+% Pregunta al usuario cuántos intentos quiere para el juego
+% -----------------------------------------------------------------------------
 preguntar_intentos(Intentos) :-
     nl, write('Con qué cantidad de intentos se va jugar? (Enter para usar 7): '), flush_output,
     read_line_to_string(user_input, Str),
@@ -125,8 +142,10 @@ preguntar_intentos(Intentos) :-
             Intentos = 7
     ).
 
-% --- Mostrar Estado del Juego ---
-
+% -----------------------------------------------------------------------------
+% mostrar_estado_juego/0
+% Muestra el estado actual del juego: intentos restantes, letras usadas y palabra oculta
+% -----------------------------------------------------------------------------
 mostrar_estado_juego :-
     intentos_restantes(Intentos),
     nl, nl, write('------------------------------'), nl,
@@ -135,6 +154,10 @@ mostrar_estado_juego :-
     mostrar_palabra_oculta,
     nl, write('------------------------------'), nl.
 
+% -----------------------------------------------------------------------------
+% mostrar_palabra_oculta/0
+% Muestra la palabra oculta con las letras adivinadas y guiones bajos para las no adivinadas
+% -----------------------------------------------------------------------------
 mostrar_palabra_oculta :-
     palabra_secreta(PalabraSecreta),
     letras_adivinadas(Adivinadas),
@@ -142,6 +165,10 @@ mostrar_palabra_oculta :-
     mostrar_letras_palabra(PalabraSecreta, Adivinadas),
     nl.
 
+% -----------------------------------------------------------------------------
+% mostrar_letras_palabra(+Palabra, +Adivinadas)
+% Muestra las letras de la palabra, mostrando guiones bajos para las no adivinadas
+% -----------------------------------------------------------------------------
 mostrar_letras_palabra([], _).
 mostrar_letras_palabra([Letra|Resto], Adivinadas) :-
     (   member(Letra, Adivinadas) ->
@@ -151,6 +178,10 @@ mostrar_letras_palabra([Letra|Resto], Adivinadas) :-
     write(' '), % Espacio entre letras o guiones
     mostrar_letras_palabra(Resto, Adivinadas).
 
+% -----------------------------------------------------------------------------
+% mostrar_lista_letras_usadas/0
+% Muestra las letras que el jugador ha adivinado
+% -----------------------------------------------------------------------------
 mostrar_lista_letras_usadas :-
     letras_adivinadas(Usadas),
     (   Usadas == [] ->
@@ -160,8 +191,10 @@ mostrar_lista_letras_usadas :-
         write(Atom)
     ).
 
-% --- Pedir Letra al Jugador ---
-
+% -----------------------------------------------------------------------------
+% pedir_letra_juego/0
+% Pide al jugador que ingrese una letra y la procesa
+% -----------------------------------------------------------------------------
 pedir_letra_juego :-
     nl, write('Ingresa una letra: '), flush_output,
     get_single_char(Code),
@@ -170,22 +203,30 @@ pedir_letra_juego :-
     nl,
     procesar_letra(Letra). % procesar_letra ya maneja la validación y el feedback
 
-% --- Manejo de Fin de Juego ---
-
+% -----------------------------------------------------------------------------
+% manejar_victoria/0
+% Muestra mensaje de victoria y pregunta si quiere jugar de nuevo
+% -----------------------------------------------------------------------------
 manejar_victoria :-
     nl, write(' Felicidades, Has ganado!'), nl,
     palabra_secreta(Palabra),
     write('La palabra era: '), atomic_list_concat(Palabra, '', Atom), write(Atom), nl,
     preguntar_jugar_de_nuevo.
 
+% -----------------------------------------------------------------------------
+% manejar_derrota/0
+% Muestra mensaje de derrota y pregunta si quiere jugar de nuevo
+% -----------------------------------------------------------------------------
 manejar_derrota :-
     nl, write('Te has quedado sin intentos. Has perdido!'), nl,
     palabra_secreta(Palabra),
     write('La palabra era: '), atomic_list_concat(Palabra, '', Atom), write(Atom), nl,
     preguntar_jugar_de_nuevo.
 
-% --- Jugar de Nuevo ---
-
+% -----------------------------------------------------------------------------
+% preguntar_jugar_de_nuevo/0
+% Pregunta al jugador si quiere jugar de nuevo o salir
+% -----------------------------------------------------------------------------
 preguntar_jugar_de_nuevo :-
     nl, write('Quieres jugar de nuevo? (s/n): '), flush_output,
     get_single_char(Code),
