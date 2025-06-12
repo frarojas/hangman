@@ -37,6 +37,3 @@
 ### Salir del juego
 - Cuando se te pregunte "¿Quieres jugar de nuevo? (s/n):", responde "n" para salir.
 - También puedes salir en cualquier momento escribiendo `halt.` en la consola de Prolog.
-
----
-¡Disfruta jugando y practicando Prolog!
