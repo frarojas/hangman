@@ -19,9 +19,12 @@ elegir_palabra(Palabra) :-
     write('2. Ingresar mi propia palabra'), nl,
     write('Elige una opción (1 o 2): '), flush_output,
     get_single_char(Code),
-    char_code(Char, Code),
+    (   Code =:= 49 -> Opcion = 1  % '1'
+    ;   Code =:= 50 -> Opcion = 2  % '2'
+    ;   Code =:= 13 -> Opcion = 1  % Enter
+    ;   write('Opción inválida. Usando aleatoria.'), nl, Opcion = 1
+    ),
     nl,
-    atom_number(Char, Opcion),
     seleccionar_opcion(Opcion, Palabra),
     !,
     write('Palabra seleccionada: '), atomic_list_concat(Palabra, '', Atom), write(Atom), nl.

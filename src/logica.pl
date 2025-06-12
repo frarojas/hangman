@@ -4,6 +4,7 @@
 % -----------------------------------------------------------------------------
 
 :- set_prolog_flag(encoding, utf8).
+:- encoding(utf8).
 
 :- dynamic letras_adivinadas/1.
 :- dynamic intentos_restantes/1.
@@ -12,17 +13,20 @@
 :- use_module(ahorcado, [elegir_palabra/1]).
 
 % -----------------------------------------------------------------------------
-% iniciar_juego/0
+% iniciar_juego/0 y iniciar_juego/1
 % Inicializa el estado del juego: selecciona palabra, reinicia intentos y letras
 % -----------------------------------------------------------------------------
 iniciar_juego :-
+    iniciar_juego(7).
+
+iniciar_juego(Intentos) :-
     retractall(letras_adivinadas(_)),
     retractall(intentos_restantes(_)),
     retractall(palabra_secreta(_)),
     elegir_palabra(Palabra),
     assertz(palabra_secreta(Palabra)),
     assertz(letras_adivinadas([])),
-    assertz(intentos_restantes(7)).
+    assertz(intentos_restantes(Intentos)).
 
 % -----------------------------------------------------------------------------
 % procesar_letra(+Letra)
@@ -90,12 +94,13 @@ letra_valida(L) :-
 
 jugar :-
     bienvenida,
-    iniciar_juego, % Sets up palabra_secreta, intentos_restantes, letras_adivinadas
+    preguntar_intentos(Intentos),
+    iniciar_juego(Intentos),
     ciclo_del_juego.
 
 bienvenida :-
     nl, write('============================='), nl,
-    write('    Bienvenido al Ahorcado!'), nl,
+    write('   Bienvenido al Ahorcado!'), nl,
     write('============================='), nl.
 
 ciclo_del_juego :-
@@ -107,6 +112,17 @@ ciclo_del_juego :-
         mostrar_estado_juego,
         pedir_letra_juego,
         ciclo_del_juego % Llamada recursiva para el siguiente turno
+    ).
+
+preguntar_intentos(Intentos) :-
+    nl, write('Con qué cantidad intentos se va jugar? (Enter para usar 7): '), flush_output,
+    read_line_to_string(user_input, Str),
+    (   Str = "" ->
+            Intentos = 7
+    ;   number_string(N, Str), N > 0 ->
+            Intentos = N
+    ;   write('Entrada inválida. Se usará el valor por defecto (7).'), nl,
+            Intentos = 7
     ).
 
 % --- Mostrar Estado del Juego ---
