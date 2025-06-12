@@ -3,12 +3,7 @@
 % Gestión del estado y lógica del juego del ahorcado
 % -----------------------------------------------------------------------------
 
-:- module(logica, [
-    iniciar_juego/0,
-    procesar_letra/1,
-    verificar_victoria/0,
-    verificar_derrota/0
-]).
+:- set_prolog_flag(encoding, utf8).
 
 :- dynamic letras_adivinadas/1.
 :- dynamic intentos_restantes/1.
@@ -100,7 +95,7 @@ jugar :-
 
 bienvenida :-
     nl, write('============================='), nl,
-    write('   ¡Bienvenido al Ahorcado!'), nl,
+    write('    Bienvenido al Ahorcado!'), nl,
     write('============================='), nl.
 
 ciclo_del_juego :-
@@ -162,13 +157,13 @@ pedir_letra_juego :-
 % --- Manejo de Fin de Juego ---
 
 manejar_victoria :-
-    nl, write('¡Felicidades! ¡Has ganado!'), nl,
+    nl, write(' Felicidades, Has ganado!'), nl,
     palabra_secreta(Palabra),
     write('La palabra era: '), atomic_list_concat(Palabra, '', Atom), write(Atom), nl,
     preguntar_jugar_de_nuevo.
 
 manejar_derrota :-
-    nl, write('Te has quedado sin intentos. ¡Has perdido!'), nl,
+    nl, write('Te has quedado sin intentos. Has perdido!'), nl,
     palabra_secreta(Palabra),
     write('La palabra era: '), atomic_list_concat(Palabra, '', Atom), write(Atom), nl,
     preguntar_jugar_de_nuevo.
@@ -176,14 +171,14 @@ manejar_derrota :-
 % --- Jugar de Nuevo ---
 
 preguntar_jugar_de_nuevo :-
-    nl, write('¿Quieres jugar de nuevo? (s/n): '), flush_output,
+    nl, write('Quieres jugar de nuevo? (s/n): '), flush_output,
     get_single_char(Code),
     char_code(Char, Code),
     nl,
     (   (Char == 's' ; Char == 'S') ->
         jugar % Reinicia el juego
     ;   (Char == 'n' ; Char == 'N') ->
-        write('¡Gracias por jugar! Adiós.'), nl,
+        write('Gracias por jugar!.'), nl,
         halt % Termina la ejecución de Prolog
     ;   write('Opción no válida. Por favor, ingresa s o n.'), nl,
         preguntar_jugar_de_nuevo % Pregunta de nuevo
