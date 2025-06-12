@@ -19,4 +19,5 @@ palabra([o, c, u, l, t, a, m, i, e, n, t, o]).
 palabra([h, e, r, m, a, n, d, a, d]).
 palabra([h, i, p, o, p, o, t, o, m, o, n, s, t, r, o, s, e, s, q, u, i, p, e, d, a, l, i, o, f, o, b, i, a]).
 palabra([j, u, e, g, o]).
+palabra([p, a, l, a, b, r, a]).
 

@@ -125,8 +125,7 @@ cargar_palabras_guardadas :-
         open('data/palabras_guardadas.pl', read, Stream),
         cargar_palabras_guardadas_loop(Stream), % Usar el nuevo loop de carga
         close(Stream)
-    ),
-    write(' Palabras guardadas cargadas correctamente.'), nl.
+    ).
 cargar_palabras_guardadas :-
     % Esta cláusula se ejecuta si palabras_guardadas.pl no existe.
     % Las palabras iniciales definidas en este archivo permanecerán activas.

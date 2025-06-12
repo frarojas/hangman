@@ -115,7 +115,7 @@ ciclo_del_juego :-
     ).
 
 preguntar_intentos(Intentos) :-
-    nl, write('Con qué cantidad intentos se va jugar? (Enter para usar 7): '), flush_output,
+    nl, write('Con qué cantidad de intentos se va jugar? (Enter para usar 7): '), flush_output,
     read_line_to_string(user_input, Str),
     (   Str = "" ->
             Intentos = 7

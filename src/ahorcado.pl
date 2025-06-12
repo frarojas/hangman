@@ -26,8 +26,7 @@ elegir_palabra(Palabra) :-
     ),
     nl,
     seleccionar_opcion(Opcion, Palabra),
-    !,
-    write('Palabra seleccionada: '), atomic_list_concat(Palabra, '', Atom), write(Atom), nl.
+    !.
 
 % -----------------------------------------------------------------------------
 % seleccionar_opcion(+Opcion, -Palabra)
