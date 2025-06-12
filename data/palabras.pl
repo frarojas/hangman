@@ -36,7 +36,7 @@ cargar_palabras_guardadas_loop(Stream) :-
         true
     ;   ( functor(Term, palabra, 1) -> % Asegurarse que es un término palabra/1
             assertz(Term)
-        ;   write('Advertencia: Término inesperado en palabras_guardadas.pl: '), write(Term), nl
+        ;   true % No hacer nada si el término no es palabra/1
         ),
         cargar_palabras_guardadas_loop(Stream)
     ).
